@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { MenuOutline, CloseOutline } from 'react-ionicons';
+import NavIcon from '../images/navIcon.svg';
+import CloseIcon from '../images/closeIcon.svg';
 
 function Navigation() {
   const [nav, toggleNav] = useState(false);
 
   return (
     <>
-      <button className="navButton" onClick={() => toggleNav(!nav)}>
-        {nav ? <CloseOutline height="30px" width="30px" /> : <MenuOutline height="30px" width="30px" />}
-      </button>
+      <div className="navButton" onClick={() => toggleNav(!nav)}>
+        {nav ? <img src={CloseIcon} alt="close" /> : <img src={NavIcon} alt="nav" />}
+      </div>
       {nav ? (
         <div className="navigation">
           <Link to="/menu" onClick={() => toggleNav(!nav)}>
