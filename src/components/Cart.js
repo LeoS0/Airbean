@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import { addToStatus, addToHistory, resetCart } from '../actions/profileActions';
 import CartIcon from '../images/carticon.svg';
-import { RemoveCircleOutline } from 'react-ionicons';
+import { RemoveCircleOutline, ChevronUpOutline, ChevronDownOutline } from 'react-ionicons';
 
 function Cart({ counter }) {
   const dispatch = useDispatch();
@@ -47,25 +47,22 @@ function Cart({ counter }) {
 
   function checkout(event) {
     event.preventDefault();
-
     axios
       .post('http://localhost:8000/api/order', values)
       .then((respone) => {
         dispatch(addToStatus(respone.data));
         dispatch(addToHistory(cartItems));
-        // dispatch(resetCart([]));
-        // history.push('/status');
+        dispatch(resetCart([]));
+        history.push('/status');
       })
       .catch((error) => {
         history.push('/menu');
       });
   }
 
-  function removeItem() {
-    // const newItems = cartItems.filter((remove, index) => cartItems[index].id !== remove.id);
-    const newItems = cartItems.filter((remove, index) => cartItems[index].id !== remove.id);
-
-    console.log(newItems);
+  function removeItem(id) {
+    const newItems = cartItems.filter((item) => item.id !== id);
+    dispatch(resetCart(newItems));
   }
 
   return (
@@ -88,9 +85,11 @@ function Cart({ counter }) {
                     </div>
                     <div className="actions">
                       <div className="quantity">
-                        <input type="number" defaultValue="1" pattern="[0-9]*" />
+                        <ChevronUpOutline width="18px" height="18px" />
+                        <input type="number" defaultValue="1" />
+                        <ChevronDownOutline width="18px" height="18px" />
                       </div>
-                      <div className="remove" onClick={removeItem}>
+                      <div className="remove" onClick={() => removeItem(item.id)}>
                         <RemoveCircleOutline />
                       </div>
                     </div>
