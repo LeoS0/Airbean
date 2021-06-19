@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 
-import { addToStatus, addToHistory, resetCart } from '../actions/profileActions';
+import { addToStatus, addToHistory, resetCart, addToCart, changeQuantity } from '../actions/profileActions';
 import CartIcon from '../images/carticon.svg';
 import { RemoveCircleOutline, ChevronUpOutline, ChevronDownOutline } from 'react-ionicons';
 
@@ -65,6 +65,24 @@ function Cart({ counter }) {
     dispatch(resetCart(newItems));
   }
 
+  function increaseQuantity(id) {
+    for (let i = 0; cartItems.length > i; i++) {
+      if (cartItems[i] === cartItems[id]) {
+        cartItems[id].quantity += 1;
+        dispatch(changeQuantity(cartItems));
+      }
+    }
+  }
+
+  function decreaseQuantity(id) {
+    for (let i = 0; cartItems.length > i; i++) {
+      if (cartItems[i] === cartItems[id] && cartItems[id].quantity > 1) {
+        cartItems[id].quantity -= 1;
+        dispatch(changeQuantity(cartItems));
+      }
+    }
+  }
+
   return (
     <>
       <div className="cart" onClick={toggleCart}>
@@ -81,13 +99,19 @@ function Cart({ counter }) {
                   <li key={index}>
                     <div className="info">
                       <p>{item.title}</p>
-                      <span>{item.price} kr</span>
+                      <span>{item.price * item.quantity} kr</span>
                     </div>
                     <div className="actions">
                       <div className="quantity">
-                        <ChevronUpOutline width="18px" height="18px" />
-                        <input type="number" defaultValue="1" />
-                        <ChevronDownOutline width="18px" height="18px" />
+                        <ChevronUpOutline width="18px" height="18px" onClick={() => increaseQuantity(index)} />
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          onChange={() => {
+                            console.log('change');
+                          }}
+                        />
+                        <ChevronDownOutline width="18px" height="18px" onClick={() => decreaseQuantity(index)} />
                       </div>
                       <div className="remove" onClick={() => removeItem(item.id)}>
                         <RemoveCircleOutline />
@@ -103,9 +127,13 @@ function Cart({ counter }) {
                   <>
                     <h3>Total</h3>
                     {sale ? (
-                      <p>{cartItems.map((item) => item.price).reduce((numberX, numberY) => numberX + numberY - 21)} kr (21kr Rabbat)</p>
+                      <p>
+                        {cartItems.map((item) => item.price * item.quantity).reduce((numberX, numberY) => numberX + numberY - 21)} kr (21kr Rabbat)
+                      </p>
                     ) : (
-                      <p>{cartItems.map((item) => item.price).reduce((numberX, numberY) => numberX + numberY)} kr</p>
+                      <>
+                        <p>{cartItems.map((item) => item.price * item.quantity).reduce((numberX, numberY) => numberX + numberY)} kr</p>
+                      </>
                     )}
                   </>
                 ) : (

@@ -23,6 +23,11 @@ const profileReducer = (state = initialState, action) => {
         ...state,
         cart: [...state.cart, action.payload],
       };
+    case 'CHANGE_QUANTITY':
+      return {
+        ...state,
+        cart: [...state.cart],
+      };
     case 'RESET_CART':
       return {
         ...state,

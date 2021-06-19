@@ -19,6 +19,13 @@ export const addToCart = (data) => {
   };
 };
 
+export const changeQuantity = (data) => {
+  return {
+    type: 'CHANGE_QUANTITY',
+    payload: data,
+  };
+};
+
 export const resetCart = (data) => {
   return {
     type: 'RESET_CART',
