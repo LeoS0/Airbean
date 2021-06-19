@@ -30,8 +30,8 @@ function User() {
                   <span>total ordersumma </span>
                 </div>
                 <div className="right">
-                  <p>-</p>
-                  <span>{item.price} kr</span>
+                  <p>{item.quantity}x</p>
+                  <span>{item.price * item.quantity} kr</span>
                 </div>
               </li>
             );
@@ -42,7 +42,7 @@ function User() {
                 <p>Total Spenderat</p>
               </div>
               <div className="right">
-                <p>{history.map((item) => item.price).reduce((numberX, numberY) => numberX + numberY)} kr</p>
+                <p>{history.map((item) => item.price * item.quantity).reduce((numberX, numberY) => numberX + numberY)} kr</p>
               </div>
             </li>
           ) : (

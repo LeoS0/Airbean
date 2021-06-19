@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 
-import { addToStatus, addToHistory, resetCart, addToCart, changeQuantity } from '../actions/profileActions';
+import { addToStatus, addToHistory, resetCart, changeQuantity } from '../actions/profileActions';
 import CartIcon from '../images/carticon.svg';
 import { RemoveCircleOutline, ChevronUpOutline, ChevronDownOutline } from 'react-ionicons';
 
