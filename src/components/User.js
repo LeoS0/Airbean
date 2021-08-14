@@ -1,7 +1,12 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Profile from '../images/profile.svg';
 
+import { addToHistory } from '../actions/profileActions';
+
 function User() {
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => {
     return state.user;
   });
@@ -9,6 +14,20 @@ function User() {
   const history = useSelector((state) => {
     return state.history;
   });
+
+  let totalSpent = [];
+
+  useEffect(() => {
+    async function getHistory() {
+      const response = await fetch('http://localhost:8000/api/history/' + user.userID);
+      const data = await response.json();
+
+      dispatch(addToHistory(data));
+    }
+
+    getHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container user">
@@ -24,14 +43,23 @@ function User() {
             return (
               <li key={index}>
                 <div className="left">
-                  <p>
-                    {item.title} #{item.id}
-                  </p>
+                  <p>#{item.historyID}</p>
                   <span>total ordersumma </span>
                 </div>
                 <div className="right">
-                  <p>{item.quantity}x</p>
-                  <span>{item.price * item.quantity} kr</span>
+                  <p>{item.historyDate}</p>
+                  <span>
+                    {}
+                    {item.history
+                      .map((item) => {
+                        totalSpent.push(item.price * item.quantity);
+                        return item.price * item.quantity;
+                      })
+                      .reduce((numberX, numberY) => {
+                        return numberX + numberY;
+                      })}{' '}
+                    kr
+                  </span>
                 </div>
               </li>
             );
@@ -42,7 +70,7 @@ function User() {
                 <p>Total Spenderat</p>
               </div>
               <div className="right">
-                <p>{history.map((item) => item.price * item.quantity).reduce((numberX, numberY) => numberX + numberY)} kr</p>
+                <p>{totalSpent.reduce((numberX, numberY) => numberX + numberY)} kr</p>
               </div>
             </li>
           ) : (

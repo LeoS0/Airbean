@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 
-import { addToStatus, addToHistory, resetCart, changeQuantity } from '../actions/profileActions';
+import { addToStatus, resetCart, changeQuantity } from '../actions/profileActions';
 import CartIcon from '../images/carticon.svg';
 import { RemoveCircleOutline, ChevronUpOutline, ChevronDownOutline } from 'react-ionicons';
 
@@ -19,8 +19,6 @@ function Cart({ counter }) {
   const user = useSelector((state) => {
     return state.user;
   });
-
-  const [values] = useState({ menuID: cartItems.menuID, userID: user.id });
 
   const [cart, cartToggle] = useState(false);
   const [sale, setSale] = useState(false);
@@ -48,10 +46,9 @@ function Cart({ counter }) {
   function checkout(event) {
     event.preventDefault();
     axios
-      .post('http://localhost:8000/api/order', values)
+      .post('http://localhost:8000/api/order', { userID: user.userID, userHistory: cartItems })
       .then((respone) => {
         dispatch(addToStatus(respone.data));
-        dispatch(addToHistory(cartItems));
         dispatch(resetCart([]));
         history.push('/status');
       })
